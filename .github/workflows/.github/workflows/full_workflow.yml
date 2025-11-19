@@ -1,23 +1,10 @@
-name: Hello World Automation
+name: Full Automation Workflow
 
 on:
   push:
 
 jobs:
-  hello:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-name: Hello World Automation
-
-on:
-name: Hello World Automation
-
-on:
-  push:
-
-jobs:
-  hello:
+  full-job:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +32,6 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "GitHub Actions Workflow Failed"
           body: "The workflow failed because the server test returned an error."
-          to: he0548545298@gmail.com
-          from: he0548545298@gmail.com
+          to: ${{ secrets.EMAIL_USERNAME }}
+          from: ${{ secrets.EMAIL_USERNAME }}
           secure: true
-
