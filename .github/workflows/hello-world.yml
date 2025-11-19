@@ -7,6 +7,45 @@ jobs:
   hello:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+name: Hello World Automation
+
+on:
+name: Hello World Automation
+
+on:
+  push:
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Print Hello World
         run: echo "Hello World from GitHub Actions!"
+
+      - name: Run Docker Compose
+        run: |
+          docker-compose --version || sudo apt-get update && sudo apt-get install -y docker-compose
+          docker-compose -f docker-compose.yml up -d --build
+
+      - name: Test Server with Python
+        run: python3 test_server.py
+
+      - name: Send Email if Test Fails
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "GitHub Actions Workflow Failed"
+          body: "The workflow failed because the server test returned an error."
+          to: he0548545298@gmail.com
+          from: he0548545298@gmail.com
+          secure: true
 
