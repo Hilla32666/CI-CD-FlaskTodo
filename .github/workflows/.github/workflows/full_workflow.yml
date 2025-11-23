@@ -14,16 +14,20 @@ jobs:
       - name: Print Hello World
         run: echo "Hello World from GitHub Actions!"
 
-      - name: Run Docker Compose
+      - name: Install Docker Compose
         run: |
           docker-compose --version || sudo apt-get update && sudo apt-get install -y docker-compose
-          docker-compose -f docker-compose.yml up -d --build
+
+      - name: Run Docker Compose
+        run: docker-compose -f docker-compose.yml up --build
 
       - name: Test Server with Python
-        run: python3 test_server.py
+        run: |
+          python3 testserver.py
+        continue-on-error: true   # המשך גם אם exit code 1 כדי שנוכל לשלוח מייל
 
       - name: Send Email if Test Fails
-        if: failure()
+        if: ${{ failure() }}
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -31,7 +35,8 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "GitHub Actions Workflow Failed"
-          body: "The workflow failed because the server test returned an error."
+          body: "The workflow failed because the server test returned a non-200 response."
           to: ${{ secrets.EMAIL_USERNAME }}
           from: ${{ secrets.EMAIL_USERNAME }}
           secure: true
+
