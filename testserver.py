@@ -1,7 +1,9 @@
 import requests
 import sys
 
-url = "http://flask_app:5001/add"
+url = "http://flask_app:5000/add"
+
+
 data = {
     "title": "Buy groceries"
 }
